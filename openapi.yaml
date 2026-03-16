@@ -823,6 +823,10 @@ components:
           description: Chat title
         mode:
           type: string
+          enum:
+          - flash_chat
+          - simple_chat
+          - deep_research
           title: Mode
           description: Chat mode
         tool_config:
@@ -971,7 +975,10 @@ components:
       properties:
         mode:
           type: string
-          pattern: ^(deep_research|simple_chat)$
+          enum:
+          - flash_chat
+          - simple_chat
+          - deep_research
           title: Mode
           description: Chat mode to update
       type: object
@@ -1024,6 +1031,10 @@ components:
           description: Chat title
         mode:
           type: string
+          enum:
+          - flash_chat
+          - simple_chat
+          - deep_research
           title: Mode
           description: Chat mode
         tool_config:
