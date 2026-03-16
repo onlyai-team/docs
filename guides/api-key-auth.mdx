@@ -1,0 +1,190 @@
+---
+title: Xác thực API Key
+description: Xác thực với Mozyfin API bằng API Key cho tích hợp server-to-server.
+icon: key
+---
+
+# Xác thực API Key
+
+Mozyfin sử dụng xác thực **API Key** — phương pháp đơn giản, stateless, lý tưởng cho mọi tích hợp. Đối tác tạo API Key một lần, sau đó dùng nó để gọi tất cả Mozyfin APIs.
+
+---
+
+## Tạo API Key
+
+### Bước 1: Tạo key
+
+Gọi endpoint tạo key:
+
+```bash
+curl -X POST https://partner-api.mozyfin.com/api/v1/auth/api-key \
+  -H "X-API-Key: YOUR_EXISTING_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Production Server",
+    "allowed_ips": ["203.0.113.0/24", "198.51.100.42"],
+    "expired_at": "2027-03-16T00:00:00Z"
+  }'
+```
+
+| Tham số       | Bắt buộc | Mô tả                                                        |
+| ------------- | -------- | ------------------------------------------------------------ |
+| `name`        | Có       | Tên mô tả cho key (1-255 ký tự)                              |
+| `allowed_ips` | Không    | Danh sách IP/CIDR được phép. Rỗng = cho phép mọi IP          |
+| `expired_at`  | Không    | Thời gian hết hạn (ISO 8601). `null` = không bao giờ hết hạn |
+
+### Bước 2: Lưu trữ key
+
+Response chứa **plaintext key** — chỉ hiển thị **một lần duy nhất**:
+
+```json
+{
+    "success": true,
+    "data": {
+        "id": "019542a1-7b3c-7d4e-8f5a-1234567890ab",
+        "name": "Production Server",
+        "key_prefix": "mozy_ak_live_",
+        "plaintext_key": "mozy_ak_live_a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
+        "allowed_ips": ["203.0.113.0/24", "198.51.100.42"],
+        "expired_at": "2027-03-16T00:00:00Z",
+        "is_active": true,
+        "last_used_at": null,
+        "created_at": "2026-03-16T10:30:00Z"
+    }
+}
+```
+
+<Warning>
+    Lưu `plaintext_key` ngay lập tức vào nơi an toàn (vault, secrets manager, biến môi trường).
+    Mozyfin **không lưu** plaintext key — chỉ lưu SHA-256 hash. Nếu mất, bạn phải tạo key mới.
+</Warning>
+
+### Thực hành bảo mật tốt nhất
+
+<Columns cols={2}>
+    <Card title="Nên làm" icon="check">
+        - Lưu trong secrets manager (AWS Secrets Manager, HashiCorp Vault) - Dùng biến môi trường,
+        không hardcode - Giới hạn IP cho server có IP tĩnh - Đặt thời gian hết hạn và xoay vòng định
+        kỳ
+    </Card>
+    <Card title="Không nên" icon="xmark">
+        - Commit vào Git repositories - Gửi qua email hoặc chat không mã hóa - Dùng trực tiếp từ
+        frontend/client-side code - Dùng chung giữa các môi trường (dev, staging, production)
+    </Card>
+</Columns>
+
+---
+
+## Sử dụng API Key
+
+Gửi API Key qua header `X-API-Key` trong mỗi request:
+
+<CodeGroup>
+```bash cURL
+curl https://partner-api.mozyfin.com/api/v1/chat \
+  -H "X-API-Key: mozy_ak_live_a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6"
+```
+
+```python Python
+import httpx
+
+headers = {"X-API-Key": "mozy_ak_live_a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6"}
+
+async with httpx.AsyncClient(base_url="https://partner-api.mozyfin.com/api/v1") as client:
+    resp = await client.get("/chat", headers=headers)
+```
+
+```javascript JavaScript
+const headers = {
+    "X-API-Key": "mozy_ak_live_a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
+    "Content-Type": "application/json",
+};
+
+const resp = await fetch("https://partner-api.mozyfin.com/api/v1/chat", { headers });
+```
+
+</CodeGroup>
+
+---
+
+## Quản lý API Keys
+
+### Liệt kê keys
+
+```bash
+curl https://partner-api.mozyfin.com/api/v1/auth/api-key \
+  -H "X-API-Key: YOUR_API_KEY"
+```
+
+<Info>`plaintext_key` luôn là `null` khi liệt kê — chỉ hiển thị lúc tạo mới.</Info>
+
+### Cập nhật key
+
+```bash
+curl -X PATCH https://partner-api.mozyfin.com/api/v1/auth/api-key/{key_id} \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Production Server v2",
+    "allowed_ips": ["203.0.113.0/24", "10.0.0.0/8"],
+    "expired_at": "2028-01-01T00:00:00Z"
+  }'
+```
+
+Chỉ gửi các trường muốn thay đổi — các trường không đổi được giữ nguyên.
+
+### Thu hồi (xóa) key
+
+```bash
+curl -X DELETE https://partner-api.mozyfin.com/api/v1/auth/api-key/{key_id} \
+  -H "X-API-Key: YOUR_API_KEY"
+```
+
+<Warning>
+    Key bị thu hồi **ngừng hoạt động ngay lập tức**. Mọi request dùng key này sẽ bị từ chối.
+</Warning>
+
+---
+
+## Giới hạn và quy tắc
+
+| Quy tắc              | Chi tiết                                               |
+| -------------------- | ------------------------------------------------------ |
+| Số key active tối đa | 10 mỗi tài khoản                                       |
+| Định dạng key        | `mozy_ak_live_` + 32 ký tự hex (128-bit entropy)       |
+| IP allowlist         | Hỗ trợ IPv4, IPv6, ký hiệu CIDR (vd: `192.168.1.0/24`) |
+| IP allowlist rỗng    | Cho phép truy cập từ mọi IP                            |
+| Hết hạn              | Tùy chọn — nếu không đặt, key không bao giờ hết hạn    |
+| Quản lý key          | Yêu cầu xác thực API Key (tạo, liệt kê, cập nhật, xóa) |
+| Sử dụng key          | Chỉ cần header `X-API-Key`                             |
+
+---
+
+## Xử lý lỗi
+
+| HTTP Status | Error Code      | Nguyên nhân                              | Cách xử lý                             |
+| ----------- | --------------- | ---------------------------------------- | -------------------------------------- |
+| `401`       | `invalid_token` | Key không tồn tại hoặc đã bị thu hồi     | Kiểm tra key, tạo mới nếu cần          |
+| `401`       | `invalid_token` | Key đã hết hạn                           | Cập nhật `expired_at` hoặc tạo key mới |
+| `403`       | —               | IP của bạn không nằm trong `allowed_ips` | Cập nhật danh sách IP được phép        |
+| `401`       | —               | Không gửi auth header                    | Thêm header `X-API-Key`                |
+
+```json
+{
+    "success": false,
+    "status_code": 401,
+    "message": "API key has expired",
+    "error_code": "invalid_token"
+}
+```
+
+---
+
+## Best practices
+
+1. **Tạo key riêng cho mỗi môi trường** — `production-server`, `staging-server`, `dev-local`
+2. **Giới hạn IP cho production** — `allowed_ips: ["203.0.113.10", "203.0.113.11"]`
+3. **Đặt hết hạn và xoay vòng** — 6-12 tháng, tạo key mới trước khi key cũ hết hạn
+4. **Theo dõi `last_used_at`** — Key không dùng 30+ ngày nên cân nhắc xóa
+5. **Xử lý retry 401** — Key hết hạn? Thông báo admin tạo key mới
+6. **Không poll quá nhanh** — Chu kỳ 1-2 giây là tối ưu; timeout tối đa 5 phút cho deep research

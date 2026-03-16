@@ -1,0 +1,75 @@
+---
+title: Xác thực
+description: Tìm hiểu cách xác thực với Mozyfin API bằng API Keys.
+icon: lock
+---
+
+# Xác thực
+
+Mozyfin API sử dụng xác thực **API Key**. Thêm API key của bạn vào header `X-API-Key` trong mỗi request.
+
+## Lấy API key
+
+<Steps>
+  <Step title="Đăng nhập Mozyfin">
+    Truy cập [mozyfin.com](https://mozyfin.com) và đăng nhập tài khoản.
+  </Step>
+  <Step title="Vào API Settings">
+    Vào [Settings](https://research.mozyfin.com/settings) trong dashboard.
+  </Step>
+  <Step title="Tạo key mới">
+    Nhấn **Create API Key**, đặt tên mô tả, và sao chép key được tạo.
+
+    <Warning>
+      API key chỉ hiển thị một lần. Lưu trữ an toàn — bạn sẽ không xem lại được.
+    </Warning>
+
+  </Step>
+</Steps>
+
+## Thực hiện request có xác thực
+
+Thêm API key vào header `X-API-Key`:
+
+<CodeGroup>
+```bash cURL
+curl -X GET "https://partner-api.mozyfin.com/api/v1/chat" \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```javascript JavaScript
+const response = await fetch("https://partner-api.mozyfin.com/api/v1/chat", {
+    headers: {
+        "X-API-Key": "YOUR_API_KEY",
+        "Content-Type": "application/json",
+    },
+});
+```
+
+```python Python
+import httpx
+
+response = httpx.get(
+    'https://partner-api.mozyfin.com/api/v1/chat',
+    headers={
+        'X-API-Key': 'YOUR_API_KEY',
+        'Content-Type': 'application/json',
+    }
+)
+```
+
+</CodeGroup>
+
+## Error responses
+
+Khi xác thực thất bại, API trả về:
+
+```json
+{
+    "success": false,
+    "status_code": 401,
+    "message": "Invalid or missing API key.",
+    "error_code": "invalid_token"
+}
+```

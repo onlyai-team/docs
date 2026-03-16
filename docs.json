@@ -1,0 +1,192 @@
+{
+    "$schema": "https://mintlify.com/docs.json",
+    "theme": "palm",
+    "name": "Developer - Mozyfin Docs",
+    "logo": {
+        "light": "/logo/logo-full.webp",
+        "dark": "/logo/logo-full-dark.webp",
+        "href": "/"
+    },
+    "favicon": "/favicon.svg",
+    "colors": {
+        "primary": "#0540BB",
+        "light": "#3B6FD4",
+        "dark": "#02226A"
+    },
+    "appearance": {
+        "default": "system"
+    },
+    "fonts": {
+        "heading": {
+            "family": "Playfair Display",
+            "weight": 700
+        },
+        "body": {
+            "family": "Inter",
+            "weight": 400
+        }
+    },
+    "background": {
+        "decoration": "gradient"
+    },
+    "navbar": {
+        "primary": {
+            "type": "button",
+            "label": "Dashboard",
+            "href": "https://research.mozyfin.com/vi/settings"
+        }
+    },
+    "footer": {},
+    "banner": {
+        "content": "🚀 Welcome to the Mozyfin Developer Docs — [Get your API key](https://research.mozyfin.com/settings)",
+        "dismissible": true
+    },
+    "navigation": {
+        "tabs": [
+            {
+                "tab": "Documentation",
+                "groups": [
+                    {
+                        "group": "Getting Started",
+                        "pages": ["introduction", "authentication", "quickstart"]
+                    },
+                    {
+                        "group": "Core Concepts",
+                        "pages": ["concepts/ai-agents", "concepts/skills"]
+                    },
+                    {
+                        "group": "Guides",
+                        "pages": [
+                            "guides/integration",
+                            "guides/api-key-auth",
+                            "guides/error-handling"
+                        ]
+                    }
+                ]
+            },
+            {
+                "tab": "API Reference",
+                "openapi": "openapi.yaml",
+                "groups": [
+                    {
+                        "group": "Workspaces",
+                        "pages": [
+                            "POST /api/v1/workspaces",
+                            "GET /api/v1/workspaces",
+                            "GET /api/v1/workspaces/{workspace_id}"
+                        ]
+                    },
+                    {
+                        "group": "Chat Sessions",
+                        "pages": [
+                            "POST /api/v1/chat",
+                            "GET /api/v1/chat",
+                            "GET /api/v1/chat/{chat_id}",
+                            "PUT /api/v1/chat/{chat_id}",
+                            "DELETE /api/v1/chat/{chat_id}"
+                        ]
+                    },
+                    {
+                        "group": "Messages",
+                        "pages": [
+                            "POST /api/v1/chat/{chat_id}/message",
+                            "GET /api/v1/chat/{chat_id}/messages",
+                            "GET /api/v1/chat/messages/{message_id}",
+                            "POST /api/v1/chat/messages/{message_id}/stop"
+                        ]
+                    },
+                    {
+                        "group": "Chat Settings",
+                        "pages": [
+                            "PUT /api/v1/chat/{chat_id}/mode",
+                            "PUT /api/v1/chat/{chat_id}/instruction-template",
+                            "PUT /api/v1/chat/{chat_id}/tool-config"
+                        ]
+                    },
+                    {
+                        "group": "Instruction Templates",
+                        "pages": [
+                            "POST /api/v1/instruction-template",
+                            "GET /api/v1/instruction-template",
+                            "GET /api/v1/instruction-template/{template_id}",
+                            "PUT /api/v1/instruction-template/{template_id}",
+                            "DELETE /api/v1/instruction-template/{template_id}"
+                        ]
+                    },
+                    {
+                        "group": "Subscription",
+                        "pages": ["GET /api/v1/subscription/usage"]
+                    }
+                ]
+            }
+        ],
+        "anchors": [
+            {
+                "anchor": "API Reference",
+                "href": "/api-reference",
+                "icon": "code"
+            },
+            {
+                "anchor": "Community",
+                "href": "https://discord.gg/mozyfin",
+                "icon": "discord"
+            }
+        ]
+    },
+    "api": {
+        "openapi": "openapi.yaml",
+        "playground": {
+            "display": "interactive",
+            "proxy": true
+        },
+        "params": {
+            "expanded": "all"
+        },
+        "examples": {
+            "languages": ["bash", "javascript", "python", "go"],
+            "autogenerate": true
+        },
+        "mdx": {
+            "server": "https://partner-api.mozyfin.com",
+            "auth": {
+                "method": "key",
+                "name": "X-API-Key"
+            }
+        }
+    },
+    "seo": {
+        "indexing": "navigable",
+        "metatags": {
+            "og:site_name": "Mozyfin Developer Docs",
+            "og:image": "https://docs.mozyfin.com/images/og-image.png",
+            "twitter:card": "summary_large_image"
+        }
+    },
+    "search": {
+        "prompt": "Search Mozyfin docs..."
+    },
+    "contextual": {
+        "options": ["copy", "view", "chatgpt", "claude"],
+        "display": "header"
+    },
+    "metadata": {
+        "timestamp": true
+    },
+    "variables": {
+        "apiBaseUrl": "https://partner-api.mozyfin.com",
+        "version": "v1"
+    },
+    "redirects": [
+        {
+            "source": "/api",
+            "destination": "/api-reference"
+        }
+    ],
+    "icons": {
+        "library": "lucide"
+    },
+    "styling": {
+        "eyebrows": "breadcrumbs",
+        "codeblocks": "dark"
+    }
+}

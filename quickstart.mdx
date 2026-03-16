@@ -1,0 +1,122 @@
+---
+title: Quickstart
+description: Bắt đầu với Mozyfin API trong chưa đầy 5 phút.
+icon: rocket
+---
+
+# Quickstart
+
+Có phân tích tài chính AI-powered đầu tiên trong vài phút.
+
+## Điều kiện cần có
+
+- Tài khoản Mozyfin ([đăng ký](https://mozyfin.com))
+- API key ([cách lấy](/authentication))
+
+## 1. Kiểm tra API key
+
+<CodeGroup>
+```bash cURL
+curl https://partner-api.mozyfin.com/api/v1/chat \
+  -H "X-API-Key: YOUR_API_KEY"
+```
+
+```javascript JavaScript
+const res = await fetch("https://partner-api.mozyfin.com/api/v1/chat", {
+    headers: { "X-API-Key": "YOUR_API_KEY" },
+});
+const data = await res.json();
+console.log(data);
+```
+
+```python Python
+import httpx
+
+res = httpx.get(
+    'https://partner-api.mozyfin.com/api/v1/chat',
+    headers={'X-API-Key': 'YOUR_API_KEY'}
+)
+print(res.json())
+```
+
+</CodeGroup>
+
+## 2. Tạo chat session
+
+<CodeGroup>
+```bash cURL
+curl -X POST https://partner-api.mozyfin.com/api/v1/chat \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "My First Analysis",
+    "mode": "simple_chat"
+  }'
+```
+
+```javascript JavaScript
+const chatRes = await fetch("https://partner-api.mozyfin.com/api/v1/chat", {
+    method: "POST",
+    headers: {
+        "X-API-Key": "YOUR_API_KEY",
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title: "My First Analysis", mode: "simple_chat" }),
+});
+const chat = await chatRes.json();
+console.log(chat.data.id); // Your chat_id
+```
+
+```python Python
+import httpx
+
+res = httpx.post(
+    'https://partner-api.mozyfin.com/api/v1/chat',
+    headers={'X-API-Key': 'YOUR_API_KEY', 'Content-Type': 'application/json'},
+    json={'title': 'My First Analysis', 'mode': 'simple_chat'}
+)
+chat_id = res.json()['data']['id']
+print(chat_id)
+```
+
+</CodeGroup>
+
+## 3. Đặt câu hỏi
+
+```bash
+curl -X POST https://partner-api.mozyfin.com/api/v1/chat/{chat_id}/message \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Accept-Language: en" \
+  -d '{"content": "Analyze VNM stock technical indicators"}'
+```
+
+## 4. Poll để lấy kết quả
+
+API xử lý câu hỏi của bạn bất đồng bộ. Poll message endpoint cho đến khi status là `completed`:
+
+```bash
+curl https://partner-api.mozyfin.com/api/v1/chat/messages/{message_id} \
+  -H "X-API-Key: YOUR_API_KEY"
+```
+
+Khi `status` là `completed`, trường `content` chứa phân tích AI đầy đủ ở định dạng Markdown.
+
+<Check>
+    Xong! Bạn đã có phân tích tài chính AI-powered. Agent đã phân tích market data, thực hiện
+    technical analysis và tạo báo cáo toàn diện.
+</Check>
+
+## Bước tiếp theo
+
+<Columns cols={3}>
+    <Card title="AI Agents" icon="brain" href="/concepts/ai-agents">
+        Hiểu workflows, agents và tools.
+    </Card>
+    <Card title="Integration Guide" icon="plug" href="/guides/integration">
+        Hướng dẫn tích hợp đối tác đầy đủ.
+    </Card>
+    <Card title="API Reference" icon="code" href="/api-reference">
+        Khám phá mọi endpoint trong interactive API playground.
+    </Card>
+</Columns>

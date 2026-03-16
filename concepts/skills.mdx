@@ -1,0 +1,68 @@
+---
+title: Skills
+description: Tìm hiểu hệ thống Skill của Mozyfin mở rộng khả năng Agent với kiến thức chuyên ngành.
+icon: graduation-cap
+---
+
+# Skills
+
+**Skills** là các module kiến thức chuyên biệt mà Agents có thể **tìm kiếm và học** tại thời điểm xử lý. Thay vì load toàn bộ kiến thức vào Agent trước, hệ thống cho phép Agents chủ động lấy đúng kiến thức cần thiết cho từng tình huống cụ thể.
+
+<Info>
+    **Ví dụ so sánh**: Nếu Agent là nhân viên, thì Skills là **thư viện tài liệu chuyên môn**
+    mà nhân viên có thể tham khảo khi cần. Nhân viên không cần ghi nhớ mọi thứ — chỉ
+    cần biết cách tìm đúng tài liệu và áp dụng.
+</Info>
+
+## Cấu trúc Skill
+
+Mỗi Skill chứa:
+
+| Thành phần    | Mô tả                              | Ví dụ                                                                                              |
+| ------------ | ---------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| **ID**       | Định danh dễ đọc                | `research-cement-industry`, `analyze-banking-sector`                                                 |
+| **Title**    | Tên mô tả ngắn                   | "Vietnam Cement Industry Research"                                                                   |
+| **Category** | Phân loại Skill                     | `industry`, `api`, `analysis`                                                                        |
+| **Purpose**  | Mô tả ngắn về chức năng của skill | "Cement industry analysis framework: market structure, sector-specific metrics, influencing factors" |
+| **Content**  | Tài liệu chi tiết (Markdown)        | Methods, industry metrics, data sources, best practices                                              |
+
+---
+
+## Cách Agents sử dụng Skills
+
+Agents tương tác với Skills qua quy trình: Search → Learn. Hoàn toàn tự động — Agent quyết định khi nào cần skill dựa trên request của người dùng.
+
+---
+
+## Ví dụ: Agent sử dụng Skill
+
+**Request**: _"Đánh giá triển vọng ngành xi măng Việt Nam và so sánh HT1, BCC, BTS"_
+
+```mermaid
+graph TD
+    A["Agent reasoning: Cần phân tích ngành xi măng → tìm skill ngành"] --> B["Search skill: 'cement construction materials Vietnam'"]
+    B --> B1["Result: research-cement-industry (relevance: 0.95)"]
+    B1 --> C["Learn skill: research-cement-industry"]
+    C --> C1["Nhận analysis framework:<br/>• Sector-specific metrics: design capacity, consumption output,<br/> clinker price, inventory ratio, coal/electricity costs<br/>• Macro factors: public investment disbursement, FDI, real estate market<br/>• Valuation methods: EV/ton capacity, production cost/ton<br/>• Industry risks: oversupply, export dependency, carbon tax"]
+    C1 --> D["Lấy financial data cho HT1, BCC, BTS<br/>(reports, stock prices)"]
+    D --> E["Áp dụng skill framework để so sánh 3 công ty"]
+    E --> F["Kết quả: bảng so sánh EV/ton, gross margin,<br/>financial leverage, export outlook theo từng công ty"]
+
+    style A fill:#fff3e0,stroke:#e65100
+    style C1 fill:#e8f5e9,stroke:#2e7d32
+    style F fill:#e3f2fd,stroke:#1565c0
+```
+
+**Không có Skills**, Agent chỉ biết phân tích tài chính chung (P/E, P/B, ROE) — thiếu các metrics theo ngành như EV/ton capacity hay clinker costs. **Có Skills**, Agent có analysis framework sâu, đưa ra đánh giá sát với thực tế ngành hơn.
+
+---
+
+## Vì sao Skills quan trọng
+
+| Không có Skills                           | Có Skills                                                   |
+| ---------------------------------------- | ------------------------------------------------------------- |
+| Agent dựa vào kiến thức chung của AI   | Agent có tài liệu chuyên biệt, chính xác                 |
+| Có thể dùng sai methods hoặc APIs            | Đảm bảo syntax đúng và best practices                     |
+| Kiến thức cố định, không cập nhật được       | Cập nhật kiến thức mà không cần thay đổi Agent                   |
+| Nhồi nhét mọi kiến thức vào prompt → chậm | Chỉ load kiến thức khi cần → nhẹ và nhanh        |
+| Khó mở rộng sang lĩnh vực mới          | Thêm skill mới = mở rộng khả năng Agent ngay lập tức |

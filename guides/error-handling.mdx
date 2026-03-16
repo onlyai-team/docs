@@ -1,0 +1,22 @@
+---
+title: Xử lý lỗi
+description: Hiểu cách xử lý lỗi API và các error codes.
+icon: triangle-alert
+---
+
+# Xử lý lỗi
+
+Mozyfin API sử dụng HTTP status codes chuẩn và trả về error responses có cấu trúc.
+
+## Các error code phổ biến
+
+| Status | Code               | Mô tả                                                 |
+| ------ | ------------------ | ----------------------------------------------------- |
+| 400    | `BAD_REQUEST`      | Request body sai định dạng hoặc thiếu trường bắt buộc |
+| 401    | `UNAUTHORIZED`     | API key không hợp lệ hoặc thiếu                       |
+| 403    | `FORBIDDEN`        | Không đủ quyền                                        |
+| 404    | `NOT_FOUND`        | Không tìm thấy resource                               |
+| 409    | `CONFLICT`         | Duplicate entry hoặc conflicting state                |
+| 422    | `VALIDATION_ERROR` | Validation request thất bại                           |
+| 429    | `RATE_LIMITED`     | Quá nhiều requests                                    |
+| 500    | `INTERNAL_ERROR`   | Lỗi server — liên hệ support                          |

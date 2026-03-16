@@ -1,0 +1,1806 @@
+openapi: 3.1.0
+info:
+  title: Mozyfin Partner API
+  description: Mozyfin Partner API — API for integrating AI financial agents into your platform.
+  version: 1.0.0
+servers:
+- url: https://partner-api.mozyfin.com
+  description: Production
+security:
+- ApiKeyAuth: []
+paths:
+  /api/v1/chat:
+    post:
+      tags:
+      - chat
+      summary: Create Chat
+      operationId: create_chat_api_v1_chat_post
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatCreateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_ChatResponse_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - chat
+      summary: Get User Chats
+      operationId: get_user_chats_api_v1_chat_get
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Limit
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          title: Page
+      - name: modes
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: 'null'
+          title: Modes
+      - name: workspace_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Workspace Id
+      - name: workflow_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Workflow Id
+      - name: portfolio_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Portfolio Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_List_ChatListResponse__'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/messages/{message_id}:
+    get:
+      tags:
+      - chat
+      summary: Get Message By Id
+      operationId: get_message_by_id_api_v1_chat_messages__message_id__get
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: message_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Message Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_ChatMessageResponse_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/messages/{message_id}/stop:
+    post:
+      tags:
+      - chat
+      summary: Stop Message
+      operationId: stop_message_api_v1_chat_messages__message_id__stop_post
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: message_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Message Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_ChatMessageResponse_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/{chat_id}:
+    get:
+      tags:
+      - chat
+      summary: Get Chat
+      operationId: get_chat_api_v1_chat__chat_id__get
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: chat_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Chat Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_ChatResponse_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - chat
+      summary: Update Chat
+      operationId: update_chat_api_v1_chat__chat_id__put
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: chat_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Chat Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - chat
+      summary: Delete Chat
+      operationId: delete_chat_api_v1_chat__chat_id__delete
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: chat_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Chat Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_NoneType_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/{chat_id}/instruction-template:
+    put:
+      tags:
+      - chat
+      summary: Update Chat Instruction Template
+      operationId: update_chat_instruction_template_api_v1_chat__chat_id__instruction_template_put
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: chat_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Chat Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatInstructionTemplateUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_ChatResponse_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/{chat_id}/message:
+    post:
+      tags:
+      - chat
+      summary: Send Message
+      operationId: send_message_api_v1_chat__chat_id__message_post
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: chat_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Chat Id
+      - name: Accept-Language
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Accept-Language
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageCreateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_ChatMessageResponse_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/{chat_id}/messages:
+    get:
+      tags:
+      - chat
+      summary: Get Chat Messages
+      operationId: get_chat_messages_api_v1_chat__chat_id__messages_get
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: chat_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Chat Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_List_ChatMessageResponse__'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/{chat_id}/mode:
+    put:
+      tags:
+      - chat
+      summary: Update Chat Mode
+      operationId: update_chat_mode_api_v1_chat__chat_id__mode_put
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: chat_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Chat Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatModeUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_NoneType_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/{chat_id}/tool-config:
+    put:
+      tags:
+      - chat
+      summary: Update Chat Tool Config
+      operationId: update_chat_tool_config_api_v1_chat__chat_id__tool_config_put
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: chat_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Chat Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatToolConfigUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_ChatResponse_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/instruction-template:
+    post:
+      tags:
+      - instruction-template
+      summary: Create Instruction Template
+      operationId: create_instruction_template_api_v1_instruction_template_post
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstructionTemplateCreateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_InstructionTemplateResponse_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - instruction-template
+      summary: Get Instruction Templates
+      operationId: get_instruction_templates_api_v1_instruction_template_get
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Limit
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          title: Page
+      - name: type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Type
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_List_InstructionTemplateResponse__'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/instruction-template/{template_id}:
+    get:
+      tags:
+      - instruction-template
+      summary: Get Instruction Template
+      operationId: get_instruction_template_api_v1_instruction_template__template_id__get
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: template_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Template Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_InstructionTemplateResponse_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - instruction-template
+      summary: Update Instruction Template
+      operationId: update_instruction_template_api_v1_instruction_template__template_id__put
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: template_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Template Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstructionTemplateUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_InstructionTemplateResponse_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - instruction-template
+      summary: Delete Instruction Template
+      operationId: delete_instruction_template_api_v1_instruction_template__template_id__delete
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: template_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Template Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_NoneType_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/subscription/usage:
+    get:
+      tags:
+      - Subscription Management
+      summary: Get Usage
+      operationId: get_usage_api_v1_subscription_usage_get
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_UsageResponse_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/workspaces:
+    post:
+      tags:
+      - workspaces
+      summary: Create Workspace
+      description: Create a new workspace.
+      operationId: create_workspace_api_v1_workspaces_post
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceCreateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_WorkspaceResponse_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - workspaces
+      summary: Get User Workspaces
+      description: Get all workspaces for a user.
+      operationId: get_user_workspaces_api_v1_workspaces_get
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          description: Items per page
+          default: 50
+          title: Limit
+        description: Items per page
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          description: Page number
+          default: 1
+          title: Page
+        description: Page number
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_List_WorkspaceListResponse__'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/workspaces/{workspace_id}:
+    get:
+      tags:
+      - workspaces
+      summary: Get Workspace
+      description: Get a specific workspace.
+      operationId: get_workspace_api_v1_workspaces__workspace_id__get
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: Workspace ID
+          title: Workspace Id
+        description: Workspace ID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_WorkspaceResponse_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API Key authentication. Pass your API key in the X-API-Key header.
+  schemas:
+    ChatCreateRequest:
+      properties:
+        title:
+          type: string
+          title: Title
+          description: Chat title
+          default: New Chat
+        mode:
+          type: string
+          enum:
+          - flash_chat
+          - simple_chat
+          - deep_research
+          title: Mode
+          description: Chat mode
+          default: simple_chat
+        workspace_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Workspace Id
+          description: Workspace ID
+        workflow_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Workflow Id
+          description: Workflow ID
+        portfolio_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Portfolio Id
+          description: Portfolio ID
+        tool_config:
+          anyOf:
+          - $ref: '#/components/schemas/ToolConfig'
+          - type: 'null'
+          description: Tool configuration for this chat
+      type: object
+      title: ChatCreateRequest
+    ChatInstructionTemplateUpdateRequest:
+      properties:
+        instruction_template_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Instruction Template Id
+          description: Instruction template ID to set (null to remove)
+      type: object
+      title: ChatInstructionTemplateUpdateRequest
+    ChatListResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: Chat ID
+        workspace_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Workspace Id
+          description: Workspace ID
+        workflow_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Workflow Id
+          description: Workflow ID
+        portfolio_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Portfolio Id
+          description: Portfolio ID
+        instruction_template_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Instruction Template Id
+          description: Instruction template ID
+        title:
+          type: string
+          title: Title
+          description: Chat title
+        mode:
+          type: string
+          title: Mode
+          description: Chat mode
+        tool_config:
+          anyOf:
+          - $ref: '#/components/schemas/ToolConfig'
+          - type: 'null'
+          description: Tool configuration for this chat
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Chat creation time
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Chat update time
+      type: object
+      required:
+      - id
+      - title
+      - mode
+      - created_at
+      - updated_at
+      title: ChatListResponse
+    ChatMessageAttachmentResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: Attachment ID
+        message_id:
+          type: string
+          format: uuid
+          title: Message Id
+          description: Message ID
+        item_type:
+          type: string
+          title: Item Type
+          description: Type of attached item (e.g., automation, portfolio)
+        item_id:
+          type: string
+          format: uuid
+          title: Item Id
+          description: ID of the attached item
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Attachment creation time
+      type: object
+      required:
+      - id
+      - message_id
+      - item_type
+      - item_id
+      - created_at
+      title: ChatMessageAttachmentResponse
+    ChatMessageCreateRequest:
+      properties:
+        content:
+          type: string
+          title: Content
+          description: Message content
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+          description: Message metadata
+      type: object
+      required:
+      - content
+      title: ChatMessageCreateRequest
+    ChatMessageResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: Message ID
+        chat_id:
+          type: string
+          format: uuid
+          title: Chat Id
+          description: Chat ID
+        role:
+          type: string
+          title: Role
+          description: Role of the sender
+        content:
+          type: string
+          title: Content
+          description: Message content
+        thinking_steps:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Thinking Steps
+          description: Agent thinking steps
+        refs:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Refs
+          description: Message references/sources
+        has_infographic:
+          type: boolean
+          title: Has Infographic
+          description: Whether the message has an infographic
+          default: false
+        status:
+          type: string
+          title: Status
+          description: Message status
+        attachments:
+          items:
+            $ref: '#/components/schemas/ChatMessageAttachmentResponse'
+          type: array
+          title: Attachments
+          description: List of message attachments
+          default: []
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Message creation time
+      type: object
+      required:
+      - id
+      - chat_id
+      - role
+      - content
+      - status
+      - created_at
+      title: ChatMessageResponse
+    ChatModeUpdateRequest:
+      properties:
+        mode:
+          type: string
+          pattern: ^(deep_research|simple_chat)$
+          title: Mode
+          description: Chat mode to update
+      type: object
+      required:
+      - mode
+      title: ChatModeUpdateRequest
+    ChatResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: Chat ID
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+          description: User ID
+        workspace_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Workspace Id
+          description: Workspace ID
+        workflow_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Workflow Id
+          description: Workflow ID
+        portfolio_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Portfolio Id
+          description: Portfolio ID
+        instruction_template_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Instruction Template Id
+          description: Instruction template ID
+        title:
+          type: string
+          title: Title
+          description: Chat title
+        mode:
+          type: string
+          title: Mode
+          description: Chat mode
+        tool_config:
+          anyOf:
+          - $ref: '#/components/schemas/ToolConfig'
+          - type: 'null'
+          description: Tool configuration for this chat
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Chat creation time
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Chat update time
+        messages:
+          items:
+            $ref: '#/components/schemas/ChatMessageResponse'
+          type: array
+          title: Messages
+          description: List of chat messages
+          default: []
+      type: object
+      required:
+      - id
+      - user_id
+      - title
+      - mode
+      - created_at
+      - updated_at
+      title: ChatResponse
+    ChatToolConfigUpdateRequest:
+      properties:
+        tool_config:
+          $ref: '#/components/schemas/ToolConfig'
+          description: Tool configuration to update
+      type: object
+      required:
+      - tool_config
+      title: ChatToolConfigUpdateRequest
+    ChatUpdateRequest:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Title
+          description: Chat title to update
+      type: object
+      title: ChatUpdateRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    HttpResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+          default: true
+        data:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Data
+        status_code:
+          type: integer
+          title: Status Code
+          default: 200
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        trace_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trace Id
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/PaginationMeta'
+          - $ref: '#/components/schemas/InfiniteScrollMeta'
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      title: HttpResponse
+    HttpResponse_ChatMessageResponse_:
+      properties:
+        success:
+          type: boolean
+          title: Success
+          default: true
+        data:
+          anyOf:
+          - $ref: '#/components/schemas/ChatMessageResponse'
+          - type: 'null'
+        status_code:
+          type: integer
+          title: Status Code
+          default: 200
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        trace_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trace Id
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/PaginationMeta'
+          - $ref: '#/components/schemas/InfiniteScrollMeta'
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      title: HttpResponse[ChatMessageResponse]
+    HttpResponse_ChatResponse_:
+      properties:
+        success:
+          type: boolean
+          title: Success
+          default: true
+        data:
+          anyOf:
+          - $ref: '#/components/schemas/ChatResponse'
+          - type: 'null'
+        status_code:
+          type: integer
+          title: Status Code
+          default: 200
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        trace_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trace Id
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/PaginationMeta'
+          - $ref: '#/components/schemas/InfiniteScrollMeta'
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      title: HttpResponse[ChatResponse]
+    HttpResponse_InstructionTemplateResponse_:
+      properties:
+        success:
+          type: boolean
+          title: Success
+          default: true
+        data:
+          anyOf:
+          - $ref: '#/components/schemas/InstructionTemplateResponse'
+          - type: 'null'
+        status_code:
+          type: integer
+          title: Status Code
+          default: 200
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        trace_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trace Id
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/PaginationMeta'
+          - $ref: '#/components/schemas/InfiniteScrollMeta'
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      title: HttpResponse[InstructionTemplateResponse]
+    HttpResponse_List_ChatListResponse__:
+      properties:
+        success:
+          type: boolean
+          title: Success
+          default: true
+        data:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/ChatListResponse'
+            type: array
+          - type: 'null'
+          title: Data
+        status_code:
+          type: integer
+          title: Status Code
+          default: 200
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        trace_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trace Id
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/PaginationMeta'
+          - $ref: '#/components/schemas/InfiniteScrollMeta'
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      title: HttpResponse[List[ChatListResponse]]
+    HttpResponse_List_ChatMessageResponse__:
+      properties:
+        success:
+          type: boolean
+          title: Success
+          default: true
+        data:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/ChatMessageResponse'
+            type: array
+          - type: 'null'
+          title: Data
+        status_code:
+          type: integer
+          title: Status Code
+          default: 200
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        trace_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trace Id
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/PaginationMeta'
+          - $ref: '#/components/schemas/InfiniteScrollMeta'
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      title: HttpResponse[List[ChatMessageResponse]]
+    HttpResponse_List_InstructionTemplateResponse__:
+      properties:
+        success:
+          type: boolean
+          title: Success
+          default: true
+        data:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/InstructionTemplateResponse'
+            type: array
+          - type: 'null'
+          title: Data
+        status_code:
+          type: integer
+          title: Status Code
+          default: 200
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        trace_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trace Id
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/PaginationMeta'
+          - $ref: '#/components/schemas/InfiniteScrollMeta'
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      title: HttpResponse[List[InstructionTemplateResponse]]
+    HttpResponse_List_WorkspaceListResponse__:
+      properties:
+        success:
+          type: boolean
+          title: Success
+          default: true
+        data:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/WorkspaceListResponse'
+            type: array
+          - type: 'null'
+          title: Data
+        status_code:
+          type: integer
+          title: Status Code
+          default: 200
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        trace_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trace Id
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/PaginationMeta'
+          - $ref: '#/components/schemas/InfiniteScrollMeta'
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      title: HttpResponse[List[WorkspaceListResponse]]
+    HttpResponse_NoneType_:
+      properties:
+        success:
+          type: boolean
+          title: Success
+          default: true
+        data:
+          type: 'null'
+          title: Data
+        status_code:
+          type: integer
+          title: Status Code
+          default: 200
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        trace_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trace Id
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/PaginationMeta'
+          - $ref: '#/components/schemas/InfiniteScrollMeta'
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      title: HttpResponse[NoneType]
+    HttpResponse_UsageResponse_:
+      properties:
+        success:
+          type: boolean
+          title: Success
+          default: true
+        data:
+          anyOf:
+          - $ref: '#/components/schemas/UsageResponse'
+          - type: 'null'
+        status_code:
+          type: integer
+          title: Status Code
+          default: 200
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        trace_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trace Id
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/PaginationMeta'
+          - $ref: '#/components/schemas/InfiniteScrollMeta'
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      title: HttpResponse[UsageResponse]
+    HttpResponse_WorkspaceResponse_:
+      properties:
+        success:
+          type: boolean
+          title: Success
+          default: true
+        data:
+          anyOf:
+          - $ref: '#/components/schemas/WorkspaceResponse'
+          - type: 'null'
+        status_code:
+          type: integer
+          title: Status Code
+          default: 200
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        trace_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trace Id
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/PaginationMeta'
+          - $ref: '#/components/schemas/InfiniteScrollMeta'
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      title: HttpResponse[WorkspaceResponse]
+    InfiniteScrollMeta:
+      properties:
+        cursor:
+          anyOf:
+          - type: string
+          - type: string
+            format: uuid
+          - type: integer
+          - type: 'null'
+          title: Cursor
+        has_more:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Has More
+      type: object
+      required:
+      - cursor
+      title: InfiniteScrollMeta
+    InstructionTemplateCreateRequest:
+      properties:
+        instruction:
+          type: string
+          title: Instruction
+          description: Instruction content
+        type:
+          type: string
+          title: Type
+          description: Template type (e.g., system, user, custom)
+      type: object
+      required:
+      - instruction
+      - type
+      title: InstructionTemplateCreateRequest
+    InstructionTemplateResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: Template ID
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+          description: User ID
+        instruction:
+          type: string
+          title: Instruction
+          description: Instruction content
+        type:
+          type: string
+          title: Type
+          description: Template type
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Update timestamp
+      type: object
+      required:
+      - id
+      - user_id
+      - instruction
+      - type
+      - created_at
+      - updated_at
+      title: InstructionTemplateResponse
+    InstructionTemplateUpdateRequest:
+      properties:
+        instruction:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instruction
+          description: Instruction content
+        type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Type
+          description: Template type
+      type: object
+      title: InstructionTemplateUpdateRequest
+    PaginationMeta:
+      properties:
+        page:
+          type: integer
+          title: Page
+        limit:
+          type: integer
+          title: Limit
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - page
+      - limit
+      - total
+      title: PaginationMeta
+    ToolConfig:
+      properties:
+        is_internet_search_disabled:
+          type: boolean
+          title: Is Internet Search Disabled
+          description: Disable internet search tool for this chat
+          default: false
+        allow_internet_urls:
+          items:
+            type: string
+          type: array
+          title: Allow Internet Urls
+          description: Allowed internet URLs for search (empty list = allow all)
+          default: []
+      type: object
+      title: ToolConfig
+    UsageResponse:
+      properties:
+        credits_used:
+          type: integer
+          title: Credits Used
+          description: Credits used this month
+        credits_cap:
+          type: integer
+          title: Credits Cap
+          description: Credits cap this month
+        usage_month:
+          type: integer
+          title: Usage Month
+          description: Current usage month
+        usage_year:
+          type: integer
+          title: Usage Year
+          description: Current usage year
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Usage creation date
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Usage update date
+      type: object
+      required:
+      - credits_used
+      - credits_cap
+      - usage_month
+      - usage_year
+      - created_at
+      - updated_at
+      title: UsageResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    WorkspaceCreateRequest:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          title: Name
+          description: Workspace name
+        description:
+          anyOf:
+          - type: string
+            maxLength: 1000
+          - type: 'null'
+          title: Description
+          description: Workspace description
+      type: object
+      required:
+      - name
+      title: WorkspaceCreateRequest
+    WorkspaceListResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: Unique workspace identifier
+        name:
+          type: string
+          title: Name
+          description: Workspace name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Workspace description
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Workspace creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Workspace last update timestamp
+        chat_count:
+          type: integer
+          title: Chat Count
+          description: Number of chats in workspace
+      type: object
+      required:
+      - id
+      - name
+      - created_at
+      - updated_at
+      - chat_count
+      title: WorkspaceListResponse
+    WorkspaceResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: Unique workspace identifier
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+          description: User who owns the workspace
+        name:
+          type: string
+          title: Name
+          description: Workspace name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Workspace description
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Workspace creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Workspace last update timestamp
+      type: object
+      required:
+      - id
+      - user_id
+      - name
+      - created_at
+      - updated_at
+      title: WorkspaceResponse
