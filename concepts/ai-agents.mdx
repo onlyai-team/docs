@@ -42,7 +42,7 @@ graph LR
 - **Tools nào** có sẵn cho Agent
 - **Chiến lược xử lý**: tra cứu nhanh hoặc phân tích sâu
 
-Mozyfin cung cấp **hai chat workflows chính**:
+Mozyfin cung cấp **hai chat workflows chính** và chế độ **auto routing**:
 
 |                   | Flash Chat                    | Simple Chat                    |
 | ----------------- | ----------------------------- | ------------------------------ |
@@ -50,6 +50,10 @@ Mozyfin cung cấp **hai chat workflows chính**:
 | **Thời gian phản hồi** | < 15 giây                  | 30 – 60 giây                |
 | **Reasoning**     | Retrieve → Synthesize         | Sequence Thinking (ReAct)      |
 | **Citations**     | Inline, ngắn gọn               | Footnote đánh số             |
+
+<Tip>
+    **Mode `auto`**: Hệ thống tự động phân tích độ phức tạp của câu hỏi và routing đến Flash Chat hoặc Simple Chat phù hợp. Đây là mode mặc định, được khuyến nghị cho hầu hết các trường hợp sử dụng.
+</Tip>
 
 ---
 
@@ -184,7 +188,9 @@ graph TD
 
 ## Chọn Workflow
 
-| Tình huống                                                   | Workflow khuyến nghị |
+Sử dụng mode **`auto`** (mặc định) để hệ thống tự động routing dựa trên độ phức tạp của câu hỏi. Bảng dưới đây minh họa cách auto routing hoạt động:
+
+| Tình huống                                                   | Auto routing đến    |
 | ---------------------------------------------------------- | -------------------- |
 | "Giá VNM hôm nay bao nhiêu?"                              | Flash Chat           |
 | "VN-Index tuần này thế nào?"                           | Flash Chat           |

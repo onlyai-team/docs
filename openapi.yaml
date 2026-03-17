@@ -77,15 +77,6 @@ paths:
             format: uuid
           - type: 'null'
           title: Workspace Id
-      - name: workflow_id
-        in: query
-        required: false
-        schema:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Workflow Id
       responses:
         '200':
           description: Successful Response
@@ -731,9 +722,11 @@ components:
           - flash_chat
           - simple_chat
           - deep_research
+          - auto
           title: Mode
-          description: Chat mode
-          default: simple_chat
+          description: Chat mode. Use `auto` to automatically route between flash_chat
+            and simple_chat based on query complexity.
+          default: auto
         workspace_id:
           anyOf:
           - type: string
@@ -741,13 +734,6 @@ components:
           - type: 'null'
           title: Workspace Id
           description: Workspace ID
-        workflow_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Workflow Id
-          description: Workflow ID
         tool_config:
           anyOf:
           - $ref: '#/components/schemas/ToolConfig'
@@ -780,13 +766,6 @@ components:
           - type: 'null'
           title: Workspace Id
           description: Workspace ID
-        workflow_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Workflow Id
-          description: Workflow ID
         instruction_template_id:
           anyOf:
           - type: string
@@ -804,6 +783,7 @@ components:
           - flash_chat
           - simple_chat
           - deep_research
+          - auto
           title: Mode
           description: Chat mode
         tool_config:
@@ -956,8 +936,10 @@ components:
           - flash_chat
           - simple_chat
           - deep_research
+          - auto
           title: Mode
-          description: Chat mode to update
+          description: Chat mode to update. Use `auto` to automatically route between
+            flash_chat and simple_chat based on query complexity.
       type: object
       required:
       - mode
@@ -981,13 +963,6 @@ components:
           - type: 'null'
           title: Workspace Id
           description: Workspace ID
-        workflow_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Workflow Id
-          description: Workflow ID
         instruction_template_id:
           anyOf:
           - type: string
@@ -1005,6 +980,7 @@ components:
           - flash_chat
           - simple_chat
           - deep_research
+          - auto
           title: Mode
           description: Chat mode
         tool_config:

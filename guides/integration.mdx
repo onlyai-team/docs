@@ -80,6 +80,7 @@ Mỗi cuộc hội thoại là một **chat session**. Đối tác chọn **AI m
 
 | Mode            | Khi nào dùng                                             | Thời gian phản hồi |
 | --------------- | -------------------------------------------------------- | ------------------ |
+| `auto`          | **Khuyến nghị.** Tự động chọn giữa flash_chat và simple_chat dựa trên độ phức tạp của câu hỏi | Tùy theo routing   |
 | `flash_chat`    | Tra giá, chỉ số, tin tức nhanh                           | < 15 giây          |
 | `simple_chat`   | Phân tích kỹ thuật, so sánh cổ phiếu, đánh giá tài chính | 30 – 60 giây       |
 | `deep_research` | Nghiên cứu đa Agent sâu và báo cáo                       | 10 – 20 phút       |
@@ -90,13 +91,13 @@ curl -X POST https://partner-api.mozyfin.com/api/v1/chat \
   -H "Content-Type: application/json" \
   -d '{
     "title": "Market Analysis",
-    "mode": "simple_chat",
+    "mode": "auto",
     "workspace_id": "019542a0-1a2b-3c4d-5e6f-7890abcdef01"
   }'
 ```
 
 <Info>
-    Đối tác có thể để người dùng chọn mode, hoặc **tự động chọn** dựa trên ngữ cảnh sản phẩm.
+    Sử dụng mode `auto` để hệ thống tự động routing giữa `flash_chat` và `simple_chat` dựa trên độ phức tạp của câu hỏi. Đối tác cũng có thể chỉ định mode cụ thể nếu muốn kiểm soát trực tiếp.
 </Info>
 
 ### Bước 4: Gửi câu hỏi
