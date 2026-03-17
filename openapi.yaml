@@ -86,15 +86,6 @@ paths:
             format: uuid
           - type: 'null'
           title: Workflow Id
-      - name: portfolio_id
-        in: query
-        required: false
-        schema:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Portfolio Id
       responses:
         '200':
           description: Successful Response
@@ -757,13 +748,6 @@ components:
           - type: 'null'
           title: Workflow Id
           description: Workflow ID
-        portfolio_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Portfolio Id
-          description: Portfolio ID
         tool_config:
           anyOf:
           - $ref: '#/components/schemas/ToolConfig'
@@ -803,13 +787,6 @@ components:
           - type: 'null'
           title: Workflow Id
           description: Workflow ID
-        portfolio_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Portfolio Id
-          description: Portfolio ID
         instruction_template_id:
           anyOf:
           - type: string
@@ -867,7 +844,7 @@ components:
         item_type:
           type: string
           title: Item Type
-          description: Type of attached item (e.g., automation, portfolio)
+          description: Type of attached item
         item_id:
           type: string
           format: uuid
@@ -1011,13 +988,6 @@ components:
           - type: 'null'
           title: Workflow Id
           description: Workflow ID
-        portfolio_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Portfolio Id
-          description: Portfolio ID
         instruction_template_id:
           anyOf:
           - type: string
