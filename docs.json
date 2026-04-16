@@ -83,7 +83,8 @@
                             "GET /api/v1/chat",
                             "GET /api/v1/chat/{chat_id}",
                             "PUT /api/v1/chat/{chat_id}",
-                            "DELETE /api/v1/chat/{chat_id}"
+                            "DELETE /api/v1/chat/{chat_id}",
+                            "GET /api/v1/chat/suggestion"
                         ]
                     },
                     {

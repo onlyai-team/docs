@@ -148,6 +148,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/suggestion:
+    get:
+      tags:
+      - chat
+      summary: Get Suggestions
+      operationId: get_suggestions_api_v1_chat_suggestion_get
+      security: []
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpResponse_List_str_'
   /api/v1/chat/{chat_id}:
     get:
       tags:
@@ -1200,6 +1214,48 @@ components:
           title: Metadata
       type: object
       title: HttpResponse[InstructionTemplateResponse]
+    HttpResponse_List_str_:
+      properties:
+        success:
+          type: boolean
+          title: Success
+          default: true
+        data:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Data
+        status_code:
+          type: integer
+          title: Status Code
+          default: 200
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        trace_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trace Id
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/PaginationMeta'
+          - $ref: '#/components/schemas/InfiniteScrollMeta'
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      title: HttpResponse[List[str]]
     HttpResponse_List_ChatListResponse__:
       properties:
         success:
